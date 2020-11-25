@@ -1,4 +1,4 @@
-package jdbc;
+package jdbc.dao;
 
 import java.util.List;
 
@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+
+import jdbc.model.Country;
 
 public class CountryDao extends JdbcDaoSupport {
 	private static final String GET_ALL_COUNTRIES_SQL = "select * from country";

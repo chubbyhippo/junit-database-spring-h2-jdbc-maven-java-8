@@ -1,30 +1,42 @@
 package jdbc;
 
-import static jdbc.CountriesLoader.COUNTRY_INIT_DATA;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import jdbc.dao.CountryDao;
+import jdbc.model.Country;
+
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration("classpath:application-context.xml")
 public class CountriesDatabaseTest {
-	private CountryDao countryDao = new CountryDao();
-	private CountriesLoader countriesLoader = new CountriesLoader();
 
-	private List<Country> expectedCountryList = new ArrayList<>();
-	private List<Country> expectedCountryListStartsWithA = new ArrayList<>();
+	@Autowired
+	private CountryDao countryDao;
+
+	@Autowired
+	private CountriesLoader countriesLoader;
+
+	private List<Country> expectedCountryList = new ArrayList<Country>();
+	private List<Country> expectedCountryListStartsWithA = new ArrayList<Country>();
 
 	@BeforeEach
 	public void setUp() {
-		TablesManager.createTable();
 		initExpectedCountryLists();
 		countriesLoader.loadCountries();
 	}
 
 	@Test
+	@DirtiesContext
 	public void testCountryList() {
 		List<Country> countryList = countryDao.getCountryList();
 		assertNotNull(countryList);
@@ -35,6 +47,7 @@ public class CountriesDatabaseTest {
 	}
 
 	@Test
+	@DirtiesContext
 	public void testCountryListStartsWithA() {
 		List<Country> countryList = countryDao.getCountryListStartWith("A");
 		assertNotNull(countryList);
@@ -46,14 +59,9 @@ public class CountriesDatabaseTest {
 		}
 	}
 
-	@AfterEach
-	public void dropDown() {
-		TablesManager.dropTable();
-	}
-
 	private void initExpectedCountryLists() {
-		for (int i = 0; i < COUNTRY_INIT_DATA.length; i++) {
-			String[] countryInitData = COUNTRY_INIT_DATA[i];
+		for (int i = 0; i < CountriesLoader.COUNTRY_INIT_DATA.length; i++) {
+			String[] countryInitData = CountriesLoader.COUNTRY_INIT_DATA[i];
 			Country country = new Country(countryInitData[0],
 					countryInitData[1]);
 			expectedCountryList.add(country);

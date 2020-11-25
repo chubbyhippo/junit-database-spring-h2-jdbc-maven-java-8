@@ -1,9 +1,11 @@
-package jdbc;
+package jdbc.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
+
+import jdbc.model.Country;
 
 public class CountryRowMapper implements RowMapper<Country> {
 	public static final String NAME = "name";
